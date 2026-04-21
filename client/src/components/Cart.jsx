@@ -25,7 +25,7 @@ function Cart() {
     if (!cart || !cart.item) return 0;
 
     return cart.item.reduce((total, item) => {
-      return total + item.productId.price * item.quantity;
+      return total + (item.productId?.price || 0) * item.quantity;
     }, 0);
   };
 
@@ -44,8 +44,8 @@ function Cart() {
               <div className="d-flex justify-content-between align-items-center">
                 
                 <div>
-                  <h5>{item.productId.name}</h5>
-                  <p>₹{item.productId.price}</p>
+                  <h5>{item.productId?.name || "Product not found"}</h5>
+                  <p>₹{item.productId?.price || 0}</p>
                   <p>Qty: {item.quantity}</p>
                 </div>
 

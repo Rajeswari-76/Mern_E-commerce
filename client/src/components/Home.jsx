@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
-
+import {useNavigate} from 'react-router-dom'
 function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate=useNavigate()
   const role=localStorage.getItem("role")
   useEffect(() => {
     fetchProducts();
@@ -12,8 +13,9 @@ function Home() {
   const fetchProducts = async () => {
     try {
       const res = await API.get("/product");
-      setProducts(res.data);
+      setProducts(res.data.products || res.data);
       console.log(res.data)
+      
     } catch (err) {
       console.log(err);
     } finally {
@@ -24,7 +26,7 @@ function Home() {
   const addToCart = async (id) => {
     API.post("/cart/add",{productId:id})
       .then((res)=>{
-        if(res.status==201){
+        if(res.status===201){
           alert("Added to cart")
           navigate("/cart")
         }
@@ -49,16 +51,16 @@ function Home() {
               <div className="col-md-3" key={p._id}>
                 <div className="card mb-3 px-3">
                   <img
-                    src={p.image}
+                    src={p?.image}
                     className="card-img-top"
-                    alt={p.name}
+                    alt={p?.name}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
 
                   <div className="card-body">
-                    <h5>{p.name}</h5>
-                    <p>₹{p.price}</p>
-                    <p>{p.description}</p>
+                    <h5>{p?.name}</h5>
+                    <p>₹{p?.price}</p>
+                    <p>{p?.description}</p>
                     {
                       role=="user"&&<button
                                           className="btn btn-success w-100"
